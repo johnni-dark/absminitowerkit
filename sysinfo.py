@@ -1,13 +1,7 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-# Copyright (c) 2014-2020 Richard Hull and contributors
-# See LICENSE.rst for details.
-# PYTHON_ARGCOMPLETE_OK
-
-
 import os
 import sys
 import time
+import datetime
 from pathlib import Path
 from datetime import datetime
 from demo_opts import get_device
@@ -15,7 +9,8 @@ from luma.core.render import canvas
 from PIL import ImageFont
 import psutil
 import subprocess as sp
-
+from subprocess import check_output
+from re import findall
 
 def bytes2human(n):
     """
@@ -35,21 +30,30 @@ def bytes2human(n):
     return "%sB" % n
 
 
+
 def cpu_usage():
     # load average
     av1, av2, av3 = os.getloadavg()
     return "Ld:%.1f %.1f %.1f " % (av1, av2, av3)
 
 
+def clock():
+    #date time
+    today = datetime.today()
+    return ( today.strftime("%d.%m.%Y-%H:%M") )
+
+
+def get_temp():
+    temp = check_output(["vcgencmd","measure_temp"]).decode("UTF-8")
+    return "Temp CPU:+"+ (findall("\d+\.\d+",temp)[0])+ "°C"
+
+
+
 def uptime_usage():
-    # uptime, Ip
-    uptime = datetime.now() - datetime.fromtimestamp(psutil.boot_time())
+    # Ip
     ip = sp.getoutput("hostname -I").split(' ')[0]
-    return "Up: %s,IP:%s" % (uptime, ip)
+    return "IP:%s" % (ip)
     
-
-
-
 
 def mem_usage():
     usage = psutil.virtual_memory()
@@ -75,14 +79,15 @@ def stats(device):
     font2 = ImageFont.truetype(font_path, 11)
 
     with canvas(device) as draw:
-        draw.text((0, 1), cpu_usage(), font=font2, fill="white")
+
         if device.height >= 32:
-            draw.text((0, 12), mem_usage(), font=font2, fill="white")
+            draw.text((0, 24), mem_usage(), font=font2, fill="white")
 
         if device.height >= 64:
-            draw.text((0, 24), disk_usage('/'), font=font2, fill="white")
+            draw.text((0, 36), disk_usage('/'), font=font2, fill="white")
             try:
-                draw.text((0, 36), network('wlan0'), font=font2, fill="white")
+                draw.text((0, 12), get_temp(), font=font2, fill="white")
+                draw.text((0, 1), clock(), font=font2, fill="white")
                 draw.text((0, 48), uptime_usage(), font=font2, fill="white")
 
             except KeyError:
