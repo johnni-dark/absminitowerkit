@@ -13,8 +13,8 @@ if [ $? -eq 0 ]; then
 	log_action_msg "psutil library has been installed successfully."
 fi
 
-# grant privilledges to user pi.
-sudo usermod -a -G gpio,i2c argon && log_action_msg "grant privilledges to user argon" || log_warning_msg "Grant privilledges failed!" 
+# grant privilledges to user pi52cloud.
+sudo usermod -a -G gpio,i2c pi52cloud && log_action_msg "grant privilledges to user pi52cloud" || log_warning_msg "Grant privilledges failed!" 
 
 # download driver from internet 
 cd /usr/local/ 
