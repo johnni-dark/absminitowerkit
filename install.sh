@@ -20,10 +20,10 @@ sudo usermod -a -G gpio,i2c pi52cloud && log_action_msg "grant privilledges to u
 cd /usr/local/ 
 if [ ! -d luma.examples ]; then
    cd /usr/local/
-   git clone https://github.com/rm-hull/luma.examples.git && cd /usr/local/luma.examples/ && sudo cp -f /home/argon/absminitowerkit/sysinfo.py . || log_warning_msg "Could not download repository from github, please check the internet connection..." 
+   git clone https://github.com/rm-hull/luma.examples.git && cd /usr/local/luma.examples/ && sudo cp -f /home/pi52cloud/absminitowerkit/sysinfo.py . || log_warning_msg "Could not download repository from github, please check the internet connection..." 
 else
    # copy sysinfo.py application to /usr/local/luma.examples/examples/ folder.
-   sudo cp -vf /home/argon/absminitowerkit/sysinfo.py /usr/local/luma.examples/examples/ 2>/dev/null
+   sudo cp -vf /home/pi52cloud/absminitowerkit/sysinfo.py /usr/local/luma.examples/examples/ 2>/dev/null
 fi 
 
 cd /usr/local/luma.examples/  && sudo -H pip3 install -e . && log_action_msg "Install dependencies packages successfully..." || log_warning_msg "Cound not access github repository, please check the internet connections!!!" 
